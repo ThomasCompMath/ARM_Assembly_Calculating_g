@@ -1,0 +1,58 @@
+//This is a basic program to show how a program for calculating the experimental value of g could be written in STL for Siemens Step 7
+
+// g = 2 * h / t^2
+
+//			2 * h 
+//				/t 
+//				/t
+
+// Let's say that we plan to use certain memory word locations for the numerical values that we will use in our program.
+// This would not actually be written out on the "code" of the program, but would be set as either a global or local variable in that section of the Step 7 environment.
+
+// MW 100 will be for the height input
+// MW 110 will be for the first measured time value input
+// MW 120 will be for the second measured time value input
+// MW 130 will be for the third measured time value input
+// MW 150 will be a container for the average time
+// MW 160 will be a container for 2*h.
+// MW 170 will be a container for t^2.
+// MW 200 will be for the result output
+
+// We could map all these to an HMI or display for example.
+
+// Start the logic
+
+L 20 //Loads 20 into ACC1
+T MW100 // Transfers the value in ACC1 to MW100
+
+//Load the necessary values into the needed memory locations. 
+L 1 //Loads 1 into ACC1 (The first measured time value) (also moves current contents of ACC1 to ACC2)
+T MW110 // Transfers the value in ACC1 to MW110
+L 2 //Loads 2 into ACC1 (The second measured time value) (also moves current contents of ACC1 to ACC2)
+T MW120 //Transfers the contents of ACC1 into MW120
+L 3 //Loads 3 into ACC1 (The third measured time value) (also moves current contents of ACC1 to ACC2)
+T MW130 //Transfers the contents of ACC1 into MW130
+
+//Calculate the average of the time values
+L MW110 //Loads 1 into ACC1, which is the first measured time value.
+L MW120 //Loads 2 into ACC1, which is the second measured time value, and moves 1 into ACC2.
++I		//Adds the contents of ACC1 and ACC2, and stores the result in ACC1
+L MW130 //Loads 3 into ACC1, which is the third measured time value, and moves the sum that was in ACC1 into ACC2.
++I		//Adds the contents of ACC1 and ACC2, and stores the result in ACC1.
+L 3		//Loads 3 into ACC1 and moves the sum that was in ACC1 into ACC2.
+/I 		//Divides ACC2 by ACC1 and stores the result in ACC1.
+T MW150	//Transfers the value in ACC1 to the container for average time.
+
+//Calculate the result of the math.
+L 2		//Loads 2 into ACC1.
+L MW100	//Loads the height into ACC1 and moves 2 into ACC2.
+*I 		//Multiplies the accumulators and stores the result in ACC1.
+T MW160	//Transfers this result (2*h) into MW160.
+L MW150 //Loads the average time into ACC1.
+L MW150 //Loads the average time into ACC1 and also moves the average time into ACC2.
+*I		//Multiplies the two accumulators, in essence squaring the average time, and stores the result in ACC1.
+T MW170	//Transfers the contents of ACC1 into the container for average time squared.
+L MW160	//Loads the calculated value of 2*h into ACC1.
+L MW170	//Loads the calculated value of t^2 into ACC2 and moves 2*h into ACC2.
+/I 		//Divides ACC2 by ACC1 and stores the result in ACC1.
+T MW200	//This now puts our experimental value of g into MW200, which could then be sent to an output device.
