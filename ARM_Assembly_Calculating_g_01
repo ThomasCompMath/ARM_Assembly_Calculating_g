@@ -1,0 +1,86 @@
+.equ HEIGHT, 0x00000000			
+.equ TIME_1, 0x00000004			
+.equ TIME_2, 0x00000008			
+.equ TIME_3, 0x0000000c			
+.equ AVG_TIME, 0x00000010
+.equ TOTAL_TIME, 0x00000014
+.equ RESULT, 0x00000020	
+
+.global _start
+_start:
+
+initialize_for_testing:
+MOV r0, #255
+MOV r1, #255
+MOV r2, #255
+MOV r3, #255
+MOV r4, #255
+MOV r5, #255
+MOV r6, #255
+
+	load_values:
+
+	LDR r0, =HEIGHT				
+	MOV r1, #20					
+	STR r1, [r0]				
+	LDR r0, =TIME_1				
+	MOV r2, #1					
+	STR r2, [r0]				
+	LDR r0, =TIME_2				
+	MOV r3, #2					
+	STR r3, [r0]				
+	LDR r0, =TIME_3				
+	MOV r4, #3					
+	STR r4, [r0]					
+	
+	calculate_total_time:
+	
+	ADD r5, r2, r3			
+	ADD r6, r5, r4
+	LDR r0, =TOTAL_TIME
+	STR r6, [r0]
+
+	LDR r0, =TOTAL_TIME
+
+	divide_time_by_3:
+
+	LDR r3, [r0]		
+	mov r4, #3		
+	MOV r5, #0			
+		
+	loop:					
+		SUBS r3, r3, r4		
+		ADD r5, r5, #1		
+		BPL loop			
+		ADD r6, r3, r4		
+		SUB r5, r5, #1		
+
+	LDR r0, =AVG_TIME		
+	STR r5, [r0]			
+	
+	multiply_height_times_two:
+	
+	LDR r0, =HEIGHT			
+	LDR r1, [r0]			
+	MOV r2, #2				
+	MUL r3, r1, r2			
+	
+	square_average_time:
+	
+	LDR r0, =AVG_TIME		
+	LDR r4, [r0]			
+	MUL r4, r4, r4			
+	
+	divide_these_two:
+	
+	MOV r5, #0
+		
+	loop2:					
+		SUBS r3, r3, r4		
+		ADD r5, r5, #1		
+		BPL loop2			
+		ADD r6, r3, r4		
+		SUB r5, r5, #1		
+	
+	LDR r0, =RESULT
+	STR r5 , [r0]
