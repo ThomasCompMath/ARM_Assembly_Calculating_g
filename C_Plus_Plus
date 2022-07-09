@@ -1,0 +1,32 @@
+//Here I will use loops, functions, and code that is a bit tidier.
+//I am using integer values, because at the lower levels I will want integers, so I might as well use them here.
+
+//Set up the initial stuff
+#include <iostream> //Necessary for cout and cin 
+using namespace std;
+
+int main() {
+	
+
+	int dropHeight = 0;
+	int averageTime = 0;
+	int g = 0;
+
+	//Determining the drop height
+	cout<<"Measure the height of the drop point and enter that here: ", cin>>dropHeight;
+	
+	//Determine the avarage fall time
+	for (i=1, i<=3, i++){
+		cout<<"Drop your object from the drop height and measure the time it takes to fall: ", cin>>averageTime;
+		averageTime += averageTime;
+	}
+	averageTime = averageTime/3;
+
+	//Calculate the experimental value for the magnitude of g
+	g = 2*dropHeight/averageTime;
+
+	//Return result to user
+	cout<<"The experimental value of the magnitude of the gravitational constant is: ", g;
+
+	return 0;
+}
